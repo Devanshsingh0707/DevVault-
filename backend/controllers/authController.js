@@ -130,9 +130,58 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
+// @desc    Upload user profile photo
+// @route   POST /api/auth/profile/photo
+// @access  Private
+const uploadProfilePhoto = async (req, res) => {
+  try {
+    const fs = require('fs');
+    const path = require('path');
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'Please upload an image file' });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Clean up previous avatar file from server disk if it exists
+    if (user.profilePhoto && user.profilePhoto.includes('/uploads/')) {
+      try {
+        const oldFilename = user.profilePhoto.split('/uploads/')[1];
+        const oldFilePath = path.join(__dirname, '../uploads', oldFilename);
+        if (fs.existsSync(oldFilePath)) {
+          fs.unlinkSync(oldFilePath);
+        }
+      } catch (unlinkErr) {
+        console.error('Failed to delete old avatar file:', unlinkErr.message);
+      }
+    }
+
+    // Save the new avatar URL
+    const serverUrl = `${req.protocol}://${req.get('host')}`;
+    user.profilePhoto = `${serverUrl}/uploads/${req.file.filename}`;
+    await user.save();
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      title: user.title,
+      description: user.description,
+      profilePhoto: user.profilePhoto,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   getUserProfile,
   updateUserProfile,
+  uploadProfilePhoto,
 };

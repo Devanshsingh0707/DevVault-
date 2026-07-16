@@ -41,21 +41,21 @@ const Profile = () => {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const base64String = reader.result;
-      try {
-        const response = await API.put('/api/auth/profile', {
-          profilePhoto: base64String
-        });
-        updateUserContext(response.data);
-        showToast('Profile photo updated successfully', 'success');
-        setIsPhotoMenuOpen(false);
-      } catch (err) {
-        showToast('Failed to update profile photo', 'error');
-      }
-    };
-    reader.readAsDataURL(file);
+    const formData = new FormData();
+    formData.append('profilePhoto', file);
+
+    try {
+      const response = await API.post('/api/auth/profile/photo', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      updateUserContext(response.data);
+      showToast('Profile photo updated successfully', 'success');
+      setIsPhotoMenuOpen(false);
+    } catch (err) {
+      showToast(err.response?.data?.message || 'Failed to update profile photo', 'error');
+    }
   };
 
   const handleRemovePhoto = async () => {
