@@ -1,6 +1,10 @@
 const Card = require('../models/Card');
 const Category = require('../models/Category');
 
+const escapeRegExp = (string) => {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
 // @desc    Get all user cards (supports search, category and language filters)
 // @route   GET /api/cards
 // @access  Private
@@ -25,7 +29,7 @@ const getCards = async (req, res) => {
     let mongooseQuery = Card.find(query);
 
     if (search) {
-      const searchRegex = new RegExp(search, 'i');
+      const searchRegex = new RegExp(escapeRegExp(search), 'i');
       mongooseQuery = mongooseQuery.and([
         {
           $or: [
@@ -236,7 +240,7 @@ const getGlobalCards = async (req, res) => {
     }
 
     if (search) {
-      const searchRegex = new RegExp(search, 'i');
+      const searchRegex = new RegExp(escapeRegExp(search), 'i');
       query.$or = [
         { title: searchRegex },
         { description: searchRegex },

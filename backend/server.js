@@ -2,6 +2,12 @@ const dotenv = require('dotenv');
 // Load environment variables before importing files that need them
 dotenv.config();
 
+// Assert critical environment variables are defined
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL CONFIG ERROR: JWT_SECRET environment variable is not defined.');
+  process.exit(1);
+}
+
 const app = require('./app');
 const connectDB = require('./config/db');
 
