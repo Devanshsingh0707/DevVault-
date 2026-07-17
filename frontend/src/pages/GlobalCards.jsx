@@ -292,8 +292,6 @@ const GlobalCards = () => {
             >
               <option value="newest">Newest</option>
               <option value="oldest">Oldest</option>
-              <option value="popular">Popular</option>
-              <option value="recently_updated">Recently Updated</option>
             </select>
           </div>
         </div>
