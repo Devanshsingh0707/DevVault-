@@ -53,7 +53,7 @@ DevVault is a state-of-the-art, AI-powered developer knowledge base and note-tak
 3. Create a `.env` file in the `backend/` folder:
    ```env
    PORT=5000
-   MONGO_URI=your_mongodb_connection_uri
+   MONGODB_URL=your_mongodb_connection_uri
    JWT_SECRET=your_jwt_signature_secret
    GEMINI_API_KEY=your_gemini_api_key
    ```
