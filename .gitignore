@@ -4,3 +4,5 @@ frontend/node_modules/
 frontend/dist/
 backend/.env
 .DS_Store
+scratch/
+DevVault_Documentation.pdf
